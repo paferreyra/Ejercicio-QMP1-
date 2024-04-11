@@ -28,21 +28,20 @@ class TipoPrenda{
 
     method categoria() { return this.categoria; }
 
-    constant ZAPATO = new TipoPrenda(PIES);
-    constant CAMISA_CORTA = new TipoPrenda(TORSO);
-    constant PANTALON = new TipoPrenda(PIERNAS);
-    constant SACO = new TipoPrenda(TORSO);
-    constant COLLAR = new TipoPrenda(CUELLO);
-    constant MEDIAS = new TipoPrenda(PIES);
-    constant POLLETA = new TipoPrenda(PIERNAS);
-    constant ANTEOJOS = new TipoPrenda(CABEZA);
-    constant ZAPATILLAS = new TipoPrenda(PIES);
-    constant GORRO = new TipoPrenda(CABEZA);
+    constant ZAPATO = new TipoPrenda(CALZADO);
+    constant CAMISA_CORTA = new TipoPrenda(PARTE_SUPERIOR);
+    constant PANTALON = new TipoPrenda(PARTE_INFERIOR);
+    constant SACO = new TipoPrenda(PARTE_SUPERIOR);
+    constant COLLAR = new TipoPrenda(ACCESORIO);
+    constant POLLERA = new TipoPrenda(PARTE_INFERIOR);
+    constant ANTEOJOS = new TipoPrenda(ACCESORIO);
+    constant ZAPATILLAS = new TipoPrenda(CALZADO);
+    constant GORRO = new TipoPrenda(ACCESORIO);
 }
 
 //Categoria de la prenda
 public enum Categoria {
-    CABEZA,CUELLO,TORSO,BRAZOS,MANOS,PIERNAS,PIES
+    PARTE_SUPERIOR, CALZADO, PARTE_INFERIOR, ACCESORIO
 } 
 
  //Material con el que esta hecha la prenda
