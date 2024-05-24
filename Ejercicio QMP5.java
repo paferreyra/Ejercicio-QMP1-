@@ -1,9 +1,179 @@
 //PSEUDOCODIGO
 //----------------------- QMP5 ---------------------------
+class Usuario {
+    List<Guardarropa> guardarropas = [];
+    Integer edad;
+    MotorSugerencias motor;
 
-//QMP4
+    public Usuario(Integer edad, MotorSugerencias motor) {
+        this.edad = edad;
+        this.motor = motor;
+    }
 
-//QMP3 (opcional) (copiado de clase)
+    List<Sugerencia> generarSugerencias() {
+        return this.motor.generarSugerencias(this);
+    }
+    void agregarGuardarropas(Guardarropa unGuardarropa){
+        guardarropas.add(unGuardarropa);
+    }
+    void sacarGuardarropas(Guardarropa unGuardarropa){
+        guardarropas.remove(unGuardarropa);
+    }
+
+}
+class Guardarropa{
+    List<Prenda> prendas = [];
+    List<Propuesta> propuestas = [];
+
+    List<Atuendo> combinaciones(){
+         retunr Arrays.asList(new Atuendo());
+     }
+    void agregarPrenda(Prenda unaPrenda){
+        prendas.add(unaPrenda);
+     }
+    void sacarPrenda(Prenda unaPrenda){
+        prendas.remove(unaPrenda);
+    }
+    void compartirGuardarropaCon(Usuario unUsuario){
+        usuario.agregarGuardarropa(this);
+    }
+    void propuestaDeModificacionPendiente(){
+        this.propuestas.filter(p=>p.estado == Estado.PENDIENTE);
+    }
+}
+
+class abstract Propuesta{
+    Estado estado;
+
+    void aceptar(Guardarropa unGuardarropa){
+        this.estado = Estado.ACEPTADO;
+        this.aceptar(unGuardarropas);
+
+    }
+    void rechazar(){
+        this.estado = Estado.RECHAZADO;
+    }
+
+    void deshacer(Guardarropa unGuardarropa);
+
+}
+
+public enum Estado{
+    ACEPTADO, RECHAZADO, PENDIENTE
+}
+
+class PropuestaParaAgregar extends Propuesta{
+    List<Prenda> prendasPropuestasAceptar = [];
+    Prenda tomarPrendaAleatoria(){
+        prendasPropuestasSacar.get(1);
+    }
+    @Override
+    void aceptar(Guardarropa unGuardarropa){
+        this.estado = Estado.ACEPTADO;
+        unGuardarropa.agregarPrenda(this.tomarPrendaAleatoria());
+    }
+    @Override
+    void deshacer(Guardarropa unGuardarropas){
+        unGuardarropas.sacarPrenda(this.tomarPrendaAleatoria())
+    }
+
+}
+class PropuestaParaSacar extends Propuesta{
+    List<Prenda> prendasPropuestasSacar = [];
+    Prenda tomarPrendaAleatoria(){
+        prendasPropuestasSacar.get(1);
+    }
+    @Override
+    void aceptar(Guardarropa unGuardarropa){
+        this.estado = Estado.ACEPTADO;
+        unGuardarropa.sacarPrenda(this.tomarPrendaAleatoria());
+    }
+    @Override
+    void deshacer(Guardarropa unGuardarropas){
+        unGuardarropas.agregarPrenda(this.tomarPrendaAleatoria())
+    }
+}
+//EXPLICACION - PROSA 5
+/*
+Para estos requerimientos se agregan los method agregar y sacar prenda al guardarropa y agregar y sacar guardarropa,
+todo esto para generar una abstraccion de la clase guardarropas y que se use como un contenedor de prendas.
+Para compartir el guardarropa con otros usuarios se crea un method dentro de guardarropas (compartirGuardarropaCon(usuario))
+en donde agrega ese mismo guardarropa que se quiere compartir a la lista de guardarropas que tiene el usuario al cual se lo
+queremos dar.
+Para las propuestas se decide crear una clase abstracta en vez de una interfaz ya que ambas propuestas que se requieren(agregar o sacar)
+comparten logica entonces se podria crear una superclase.
+Para el estado de aceptar o rechazar la propuesta se penso en un Enum para validacion, ademas de que es un entorno cerrado.
+Por ultimo para deshacer el guardarropa que se hizo, solo se agrega un method de deshacer() el cual hace lo contrario a lo que
+hizo la propuesta cuando acepto().
+ */
+//----------------------- QMP4 ---------------------------
+AccuWeatherAPI apiClima = new AccuWeatherAPI();
+List<Map<String, Object>> condicionesClimaticas = apiClima.getWeather(“Buenos Aires, Argentina”);
+condicionesClimaticas.get(0).get("PrecipitationProbability"); //Devuelve un número del 0 al 1
+
+ServicioMeteorologico servicioMeteorologico = new ServicioMeteorologico();
+estadoDelTiempo = servicioMeteorologico.obtenerCondicionesClimaticas("Buenos Aires, Argentina");
+estadoDelTiempo.get(0).get("Temperatura");
+
+class ServicioMeteorologico{
+    Map<String, Object> ultimaRespuesta;
+    LocalDateTime proximaExpiracion;
+    AccuWeatherAPI api;
+    Duracion expiracion;
+    String direccion;
+
+    public ServicioMeteorologico(AccuWeatherAPI api, Duracion expiracion, String direccion) {
+        this.api = api;
+        this.expiracion = expiracion;
+        this.direccion = direccion;
+    }
+
+    Map<String, Object> obtenerCondicionesClimaticas() {
+        if (this.ultimaRespuesta == null || this.expiro()) {
+            this.ultimaRespuesta = consultarApi();
+            this.proximaExpiracio = LocalDateTime.now().plus(this.expiracion);
+        }
+        return this.ultimaRespuesta;
+    }
+
+    boolean expiro() {
+        return proximaExpiracion.isAfter(DateTime.now);
+    }
+
+    EstadoDelTiempo obtenerCondicionesClimaticas(String direccion){
+
+    }
+
+    RespuestaMeteorologica consultarApi(String direccion) {
+        var weather = this.api.getWeather(direccion);
+        return new RespuestaMeteorologica(new EstadoDelTiempo(weather.get("Temperature"), weather.get("Humidity") > 0.8 ? Humedad.ALTA : Humedad.BAJA),this.proximaExpiracion());
+    }
+
+}
+
+class Asesor {
+    ServicioMeteorologico servicio;
+
+    Atuendo sugerirAtuendo(String direccion) {
+        Map estadoDelTiempo = this.servicio().obtenerClima(direccion);
+    }
+
+    List<Atuendo> combinaciones = guardarropas.todasLasPosiblesCombinaciones(temperatura, humerdad){
+        return combinaciones.filter(c -> c.aptaTemperatura(temperatura)).filter(c->c.aptaHumedad(humedad)).first().get();
+    }
+}
+
+class Atuendo{
+    boolean aptaTemperatura(int temperatura) = true;
+    boolean aptaHumedad(Humedad humedad) = true;
+}
+
+public enum Humedad{
+    MUY BAJA, BAJA, MEDIA, ALTA, MUY ALTA
+    }
+
+
+//----------------------- QMP3 (OPCIONAL COPIADO DE CLASE) ---------------------------
 enum Formalidad{
     FORMAL,INFORMAL,NEUTRA
 }
@@ -19,19 +189,6 @@ class Sugerencia{
         this.calzado=calzado;
     }
 }
-
-class Usuario{
-    List<Prenda> prendas = [];
-    Integer edad;
-    MotorSugerencias motor;
-
-    public Usuario(Integer edad,MotorSugerencias motor){
-        this.edad=edad;
-        this.motor=motor;
-    }
-    List<Sugerencia> generarSugerencias(){
-        return this.motor.generarSugerencias(this);
-    }
 }
 
 interface MotorSugerencias{
@@ -84,7 +241,7 @@ class ProveedorDeMotor{
 
 }
 
-//QMP2
+//----------------------- QMP2 ---------------------------
 
 class Borrador{
     TipoPrenda tipo;
@@ -190,7 +347,7 @@ contenga la creacion de las distintas partes y de alli utilizan esta interfaz la
  */
 
 
-//QMP1
+//----------------------- QMP1 ---------------------------
 //PRENDA
 class Prenda{
     TipoPrenda tipo;
@@ -233,24 +390,24 @@ class TipoPrenda{
 }
 
 //Ejemplos
-    constant ZAPATO = new TipoPrenda(PIES);
-    constant CAMISA_CORTA = new TipoPrenda(TORSO);
-    constant PANTALON = new TipoPrenda(PIERNAS);
-    constant SACO = new TipoPrenda(TORSO);
-    constant COLLAR = new TipoPrenda(CUELLO);
-    constant MEDIAS = new TipoPrenda(PIES);
-    constant POLLETA = new TipoPrenda(PIERNAS);
-    constant ANTEOJOS = new TipoPrenda(CABEZA);
-    constant ZAPATILLAS = new TipoPrenda(PIES);
-    constant GORRO = new TipoPrenda(CABEZA);
+constant ZAPATO = new TipoPrenda(PIES);
+constant CAMISA_CORTA = new TipoPrenda(TORSO);
+constant PANTALON = new TipoPrenda(PIERNAS);
+constant SACO = new TipoPrenda(TORSO);
+constant COLLAR = new TipoPrenda(CUELLO);
+constant MEDIAS = new TipoPrenda(PIES);
+constant POLLETA = new TipoPrenda(PIERNAS);
+constant ANTEOJOS = new TipoPrenda(CABEZA);
+constant ZAPATILLAS = new TipoPrenda(PIES);
+constant GORRO = new TipoPrenda(CABEZA);
 
 
 //Categoria de la prenda
 public enum Categoria {
     CABEZA,CUELLO,TORSO,BRAZOS,MANOS,PIERNAS,PIES
-} 
+}
 
- //Material con el que esta hecha la prenda
+//Material con el que esta hecha la prenda
 public enum Material {
     JEAN, ALGODON, CUERO, LANA, POLIESTER
 }
